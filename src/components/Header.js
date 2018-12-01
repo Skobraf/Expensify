@@ -6,7 +6,6 @@ const Header = () => {
 		<div>
 			<div>
 			<header>Expensify</header>
-			<NavLink  to="/create">Go to create</NavLink>
 		</div>
 		</div>
 		);
