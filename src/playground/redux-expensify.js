@@ -48,6 +48,16 @@ const sortByDate = () => ({
 	type: 'SORT_BY_DATE'
 });
 
+const setStartDate = (startDate) => ({
+	type: 'SET_START_DATE',
+	startDate
+});
+
+const setEndDate = (endDate) => ({
+	type: 'SET_END_DATE',
+	endDate
+});
+
 const expensesReducerDefaultState = [];
 const expensesReducer = (state = expensesReducerDefaultState, action) => {
 	switch(action.type) {
@@ -99,6 +109,16 @@ const filtersReducer = (state = filterReducerDefaultState, action) => {
 				...state,
 				sortBy: 'amount'
 			};
+		case 'SET_START_DATE':
+			return {
+				...state,
+				startDate: action.startDate
+			};
+		case 'SET_END_DATE':
+			return {
+				...state,
+				endDate: action.endDate
+			};
 		default:
 			return state;
 	}
@@ -130,6 +150,9 @@ store.dispatch(setTextFilter("rent"));
 store.dispatch(sortByAmount());
 store.dispatch(sortByDate());
 
+store.dispatch(setStartDate(125));
+store.dispatch(setStartDate());
+store.dispatch(setEndDate(1254));
 const demoState = {
 	expenses: [{
 		id: 'hfrau',
