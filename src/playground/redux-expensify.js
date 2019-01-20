@@ -58,6 +58,22 @@ const setEndDate = (endDate) => ({
 	endDate
 });
 
+const getVisibleExpenses = (expenses, {text, sortBy, startDate, endDate}) => ({
+	return expenses.filter((expense) => {
+		const startDateMatch = typeof startDate !== 'number' || expense.createdAt >= startDate;
+		const endDateMatch   = typeof endDate   !== 'number' || expense.createdAt <= endDate;
+		const textMatch 	 = expense.description.toLowerCase().includes(text.toLowerCase());
+
+		return startDateMatch && endDateMatch && textMatch;
+	}).sort((a,b) => {
+		if(sortBy === 'date') {
+			return a.createdAt < b.createdAt ? 1 : -1;
+		} else if (sortBy === 'amount') {
+			return a.amount < b.amount ? 1 : -1;
+		}
+	});
+});
+
 const expensesReducerDefaultState = [];
 const expensesReducer = (state = expensesReducerDefaultState, action) => {
 	switch(action.type) {
@@ -91,7 +107,7 @@ const filterReducerDefaultState = {
 	startDate: undefined,
 	endDate: undefined
 
-}
+};
 const filtersReducer = (state = filterReducerDefaultState, action) => {
 	switch(action.type) {
 		case 'SET_TEXT_FILTER':
@@ -122,7 +138,7 @@ const filtersReducer = (state = filterReducerDefaultState, action) => {
 		default:
 			return state;
 	}
-}
+};
 
 const store = createStore(combineReducers({
 	expenses: expensesReducer,
@@ -130,7 +146,9 @@ const store = createStore(combineReducers({
 }));
 
 store.subscribe(()=>{
-	console.log(store.getState());
+	const state = store.getState();
+	const visibleExpenses= getVisibleExpenses(state.expenses, state.filters);
+	console.log(visibleExpenses);
 })
 
 const expense1 = store.dispatch(addExpense({
